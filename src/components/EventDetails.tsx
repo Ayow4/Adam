@@ -110,7 +110,7 @@ const eventDetails = [
   {
     icon: Clock,
     label: "Time",
-    value: "10:00 AM",
+    value: "9:00 AM",
     description: "Ceremony begins promptly",
   },
   {
