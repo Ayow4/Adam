@@ -8,37 +8,54 @@ const MusicToggle = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Create audio element with a royalty-free lullaby/soft music
-    // Using a placeholder - you can replace with your own music URL
-    audioRef.current = new Audio();
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
-    
+    // Create audio element. Place a file at public/music/lullaby.mp3
+    // or change the path below to a valid URL/imported asset.
+    const audio = new Audio("/music/lullaby.mp3");
+    audio.loop = true;
+    audio.volume = 0.3;
+    audio.addEventListener("error", () => {
+      console.warn(
+        "MusicToggle: failed to load audio from /music/lullaby.mp3. Add a file at public/music/lullaby.mp3 or update the path."
+      );
+    });
+    audioRef.current = audio;
+
     // Hide tooltip after 3 seconds
     const timer = setTimeout(() => setShowTooltip(false), 3000);
-    
+
     return () => {
       clearTimeout(timer);
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = "";
       }
     };
   }, []);
 
   const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        // Note: Audio won't play without a valid source
-        // Replace the src with your actual music file
-        audioRef.current.play().catch(() => {
-          // Audio autoplay was prevented
-        });
-      }
-      setIsPlaying(!isPlaying);
+    if (!audioRef.current) {
+      setShowTooltip(true);
+      return;
     }
-    setShowTooltip(false);
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      setShowTooltip(false);
+      return;
+    }
+
+    // Play returns a promise; update state only on success
+    audioRef.current
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+        setShowTooltip(false);
+      })
+      .catch((err) => {
+        console.error("MusicToggle: play() failed", err);
+        setShowTooltip(true);
+      });
   };
 
   return (
