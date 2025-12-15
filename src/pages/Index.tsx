@@ -32,7 +32,7 @@ const Index = () => {
         <Footer />
 
         {/* Floating controls */}
-        {/* <MusicToggle /> */}
+        <MusicToggle />
         <ShareButton />
       </main>
     </>
