@@ -123,7 +123,7 @@ const eventDetails = [
     icon: Shirt,
     label: "Dress Code",
     value: "Smart Casual",
-    description: "Soft pastels encouraged",
+    description: "White attire is encouraged",
   },
 ];
 
